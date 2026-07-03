@@ -44,7 +44,8 @@ Bu doküman, İHA'nın tespit ettiği güzergah bilgisinin İKA'ya ve Yer Kontro
   "received_by": "IKA-01",
   "timestamp_utc": "2026-08-15T10:32:41.850Z",
   "status": "accepted"
-}## Taşıma Katmanı
+}
+## Taşıma Katmanı
 UDP üzerinden, 5.8 GHz hat birincil, 915 MHz SiK hat yedek (JSON aynı formatta).
 
 ## Değişiklik Kuralı
