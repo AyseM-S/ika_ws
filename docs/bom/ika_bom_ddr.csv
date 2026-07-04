@@ -1,0 +1,8 @@
+Bilesen,Marka/Model,Adet,Birim_Agirlik_g,Toplam_Agirlik_g,Boyut_mm,Tahmini_Maliyet_TL,Tedarik_Durumu,Tedarikci,Tahmini_ETA
+Otopilot,Pixhawk 6C,1,40,40,85.5x42x33,13110,Siparis_Edildi,Robotistan,3-5 is gunu
+2D LiDAR,Slamtec RPLidar A2M8,1,190,190,76x76x41,15000,Henuz_Aksiyon_Alinmadi,Direnc.net,5-7 is gunu
+IMU,Bosch BNO055 breakout,1,5,5,27x39,750,Henuz_Aksiyon_Alinmadi,Robotistan,2-4 is gunu
+Motor Surucu,"Cytron MDD10A (yurtdisi) veya BTS7960 x2 (yerli)",1,80,80,60x55x15,2500,Karar_Bekliyor,"F1Depo (BTS7960) / Cytron resmi magaza (MDD10A - ithalat)","BTS7960: 2-3 is gunu | MDD10A: 15-25 is gunu (gumruk dahil)"
+Ultrasonik Sensor,JSN-SR04T,2,28,56,45x20,300,Henuz_Aksiyon_Alinmadi,Robolinkmarket,2-4 is gunu
+Companion Computer,Raspberry Pi 4,1,46,46,85x56,10000,Alindi,Robotistan,Teslim alindi
+Motor+Enkoder Seti,DC Reduktorlu Motor + Hall Encoder,4,180,720,TBD,8000,Siparis_Edildi,Direnc.net,5-7 is gunu
