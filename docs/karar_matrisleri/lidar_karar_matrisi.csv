@@ -1,0 +1,8 @@
+Kriter,Agirlik,RPLidar A2M8 (Secilen),YDLidar X4,Hokuyo URG-04LX
+Menzil yeterliligi (0.25),0.25,9,6,10
+Maliyet (0.20),0.20,7,9,2
+Agirlik etkisi (0.15),0.15,7,8,4
+Disaridaki tutarlik/toz direnci (0.15),0.15,6,5,8
+ArduPilot/ROS2 entegrasyonu (0.15),0.15,9,7,6
+Toplulukdestek (0.10),0.10,8,6,7
+Yedeklilik/kolay tedarik (0.10),0.10,6,7,3

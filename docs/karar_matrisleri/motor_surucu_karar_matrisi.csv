@@ -1,0 +1,8 @@
+Kriter,Agirlik,Cytron MDD10A,BTS7960 (x2 modul),Cytron MDDRC10
+Akim kapasitesi yeterliligi (0.25),0.25,8,9,8
+Yerel stok/tedarik kolayligi (0.20),0.20,3,9,4
+Maliyet (0.15),0.15,7,9,6
+Entegrasyon kolayligi (tek kart vs 2 modul) (0.15),0.15,9,5,9
+Isi yonetimi (0.10),0.10,7,6,7
+ArduPilot/ArduRover uyumu (0.10),0.10,9,7,9
+Topluluk/destek (0.05),0.05,8,9,7

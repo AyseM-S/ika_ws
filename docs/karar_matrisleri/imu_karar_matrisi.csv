@@ -1,0 +1,7 @@
+Kriter,Agirlik,BNO055 (Secilen),MPU9250,MPU6050
+Sensor fuzyon (onboard) (0.30),0.30,10,4,3
+Dogruluk/gurultu (0.20),0.20,8,6,5
+Maliyet (0.15),0.15,6,9,10
+ArduPilot/ROS2 entegrasyonu (0.15),0.15,8,8,7
+Guc tuketimi (0.10),0.10,7,8,8
+Kalibrasyon kolayligi (0.10),0.10,9,5,4
