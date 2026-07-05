@@ -6,5 +6,5 @@ Kamera,Raspberry Pi Camera Module 3 Wide,1,15,15,25x24x12.4,2240,Bilinmiyor_IHA_
 GNSS,Holybro/CubePilot Here3+,1,49,49,76x76x16.6,9000,Bilinmiyor_IHA_Lead_Teyit_Edecek,"Yurtdisi ithalat (Airbot/GetFPV) - yerli distributor tespit edilmedi",10-20 is gunu (ithalat)
 Motor+ESC+Pervane,"TBD - marka/model secimi Aerodinamik Lead'e bagli (BLDC, T/W>=0.20 gereksinimi)",1,TBD,TBD,TBD,15000,TBD,TBD,TBD
 Parasut Sistemi,"TBD - ozel/custom tasarim (cruciform + servolu acici)",1,TBD,TBD,TBD,3000,TBD,TBD,TBD
-LiPo Batarya (IHA payi),"4S 4000mAh (marka secimine bagli, temsili deger)",1,420,420,135x43x33,4000,Bilinmiyor_IHA_Lead_Teyit_Edecek,"Robotistan (ProFuse 4S 4200mAh benzeri)",1-3 is gunu
+LiPo Batarya (IHA payi),"4S 8000mAh (marka secimine bagli, temsili deger)",1,725,725,L 168 x Y 55 x Y 35 mm,4000,Bilinmiyor_IHA_Lead_Teyit_Edecek,"Robotistan (ProFuse 4S 4200mAh benzeri)",1-3 is gunu
 Kompozit Malzemeler,"CF+balsa+kapton+epoksi (yapisal kutle butcesinden hesaplanacak)",1,TBD,TBD,TBD,10000,TBD,TBD,TBD
