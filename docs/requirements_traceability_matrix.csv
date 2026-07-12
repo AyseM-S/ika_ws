@@ -6,8 +6,8 @@ No,Gereksinim Metni (Ozet),Sahibi Alt Sistem,Dogrulama Yontemi,Kanit Referansi,D
 15,"Tespit edilen guzergah bilgisi IKA'ya aktarilacak",IKA Yazilim,Test (entegrasyon),"route_bridge_node ICD v2 ile KABUL testi basarili (log: route_update KABUL EDILDI seq=1 4 waypoint)",Karsilandi
 16,"Guzergah aktarimi IHA inisinden once tamamlanacak",IKA Yazilim,Test + Analiz (state machine),"iha_state.airborne kontrolu eklendi ve test edildi (log: IHA havada degil Md.16 REDDEDILDI)",Karsilandi
 17,"Aktarim gercek zamanli yer istasyonundan izlenebilecek",Ortak (Yazilim+Haberlesme),Gosterim (demo),route_ack hem IHA hem YKI'ye UDP ile gonderiliyor (kod hazir) - gercek YKI arayuzu/dashboard yok,Dogrulama Sureci Devam Ediyor
-18,"IKA aktarilan guzergahi takip ederek hedefe otonom ulasacak",IKA Yazilim,Test (saha/simulasyon),EKF calisiyor ve test edildi (Gun8) - Nav2/DWA config yazildi ama HENUZ CALISTIRILMADI,Dogrulama Sureci Devam Ediyor
-19,"IKA gorevini tam otonom icra edecek",IKA Yazilim,Test,"Interlock+mission_manager+EKF birlikte test edildi (touchdown oncesi/sonrasi davranis dogrulandi, 0.0 -> 0.3 gecisi)",Dogrulama Sureci Devam Ediyor
+18,"IKA aktarilan guzergahi takip ederek hedefe otonom ulasacak",IKA Yazilim,Test (saha/simulasyon),"Kapali-dongu test: Nav2/DWB gercek path-following, BEKLEME->HAZIR->GOREV_AKTIF->TAMAMLANDI dongusu tam calisti (kisa rota, ~3.6m)",Karsilandi
+19,"IKA gorevini tam otonom icra edecek",IKA Yazilim,Test,"EKF+Nav2+interlock+comms+mission_manager uctan uca entegre calisti, manuel mudahale olmadan TAMAMLANDI'ya ulasti",Karsilandi
 23,"IKA koordinat/hiz bilgisi yer istasyonunda gercek zamanli izlenebilecek",Ortak (Yazilim+Haberlesme),Gosterim,route_ack YKI'ye UDP ile gidiyor ama goruntuleme arayuzu (dashboard) yok,Dogrulama Sureci Devam Ediyor
 24,"IKA'nin guzergah takibi yer istasyonunda canli gosterilecek",Ortak (Yazilim+Haberlesme),Gosterim,Ayni - veri akisi var goruntuleme yok,Dogrulama Sureci Devam Ediyor
 32,"IKA uzerinde aviyonik ana guc hattini kesen Acil Akim Kesici Anahtar bulunacak",IKA Elektrik/Donanim,Inceleme + Test,TBD - FIZIKSEL DONANIM GEREKTIRIR bugunku interlock_node ile KARISTIRILMAMALI,Baslanmadi
