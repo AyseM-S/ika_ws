@@ -75,6 +75,7 @@ private:
     odom.twist.twist.linear.x = v;
     odom.twist.twist.angular.z = omega;
     odom.twist.covariance[0] = 0.02;   // sadece hiza guven (yaw IMU'dan gelecek)
+    odom.twist.covariance[7] = 0.001;  // Y-hiz varyansi - SIFIR OLAMAZ, EKF kararliligi icin sart
     odom_pub_->publish(odom);
   }
 
