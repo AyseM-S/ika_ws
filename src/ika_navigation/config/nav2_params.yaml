@@ -1,0 +1,51 @@
+# İKA Nav2 Konfigürasyonu - placeholder degerlerle (VARSAYIM isaretli satirlar)
+controller_server:
+  ros__parameters:
+    controller_frequency: 10.0
+    min_x_velocity_threshold: 0.05
+    min_theta_velocity_threshold: 0.05
+    FollowPath:
+      plugin: "dwb_core::DWBLocalPlanner"
+      max_vel_x: 0.35          # *** VARSAYIM *** - kesin motor/redüktör hız limiti bekleniyor
+      min_vel_x: -0.1
+      max_vel_theta: 0.5       # *** VARSAYIM ***
+      acc_lim_x: 0.3
+      acc_lim_theta: 0.5
+      xy_goal_tolerance: 0.15   # HB 2x2m oldugu icin makul
+      yaw_goal_tolerance: 0.3
+
+local_costmap:
+  local_costmap:
+    ros__parameters:
+      update_frequency: 5.0
+      publish_frequency: 2.0
+      global_frame: odom
+      robot_base_frame: base_link
+      rolling_window: true
+      width: 10
+      height: 10
+      resolution: 0.05
+      robot_radius: 0.3        # BILINIYOR (mekanik DDR)
+      plugins: ["obstacle_layer", "inflation_layer"]
+      obstacle_layer:
+        plugin: "nav2_costmap_2d::ObstacleLayer"
+        observation_sources: scan
+        scan:
+          topic: /scan
+          data_type: "LaserScan"
+          marking: true
+          clearing: true
+      inflation_layer:
+        plugin: "nav2_costmap_2d::InflationLayer"
+        inflation_radius: 0.4  # *** VARSAYIM *** - engelden guvenli mesafe
+
+global_costmap:
+  global_costmap:
+    ros__parameters:
+      update_frequency: 1.0
+      publish_frequency: 1.0
+      global_frame: map
+      robot_base_frame: base_link
+      resolution: 0.05
+      robot_radius: 0.3
+      plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
