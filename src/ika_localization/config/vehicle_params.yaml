@@ -1,0 +1,13 @@
+# ============================================================
+# TEK DOGRULUK KAYNAGI - cevaplar gelince SADECE burayi doldurun
+# ============================================================
+wheel_odom_node:
+  ros__parameters:
+    wheel_radius: 0.065        # BILINIYOR (belgeden): 130mm dis cap / 2
+    track_width: 0.0           # <<< BEKLENIYOR: tekerlekler arasi mesafe (m)
+    encoder_ppr: 0.0           # <<< BEKLENIYOR: enkoder PPR (pulse/tur)
+    publish_rate_hz: 30.0
+nav2_params_common:
+  ros__parameters:
+    robot_radius: 0.3          # BILINIYOR (belgeden): R=300mm emniyet cemberi
+    vehicle_mass_kg: 0.0       # <<< BEKLENIYOR: 10kg mi kesinlesecek (arkadasiniz duzeltince)
