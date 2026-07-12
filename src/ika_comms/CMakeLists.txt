@@ -19,7 +19,10 @@ target_link_libraries(route_bridge_node nlohmann_json::nlohmann_json)
 add_executable(test_route_sender src/test_route_sender.cpp)
 target_link_libraries(test_route_sender nlohmann_json::nlohmann_json)
 
-install(TARGETS route_bridge_node test_route_sender DESTINATION lib/${PROJECT_NAME})
+add_executable(test_route_sender_rejected src/test_route_sender_rejected.cpp)
+target_link_libraries(test_route_sender_rejected nlohmann_json::nlohmann_json)
+
+install(TARGETS route_bridge_node test_route_sender test_route_sender_rejected DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

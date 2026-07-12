@@ -20,23 +20,21 @@ int main()
   route["coordinate_frame"] = "wgs84";
   route["waypoints"] = json::array({
     {{"seq", 0}, {"lat", 39.925101}, {"lon", 32.836742}},
-    {{"seq", 1}, {"lat", 39.925178}, {"lon", 32.836801}},
-    {{"seq", 2}, {"lat", 39.925310}, {"lon", 32.836915}},
-    {{"seq", 3}, {"lat", 39.925482}, {"lon", 32.837060}}});
+    {{"seq", 1}, {"lat", 39.925178}, {"lon", 32.836801}}});
 
   uint32_t crc = ika_comms::crc32(route.dump());
   std::ostringstream oss; oss << std::hex << std::setw(8) << std::setfill('0') << crc;
 
   json msg;
   msg["msg_type"] = "route_update";
-  msg["msg_id"] = "IHA01-TEST01";
-  msg["seq_no"] = 1;
-  msg["timestamp_utc"] = "2026-07-12T00:00:00.000Z";
+  msg["msg_id"] = "IHA01-TEST02";
+  msg["seq_no"] = 2;
+  msg["timestamp_utc"] = "2026-07-12T00:00:01.000Z";
   msg["sender"] = "IHA-01";
   msg["receiver"] = "IKA-01";
   msg["mission_id"] = "test-run";
-  msg["iha_state"] = {{"airborne", true}, {"altitude_agl_m", 82.4},
-                       {"flight_mode", "AUTO"}, {"gps_fix", "rtk_fixed"}};
+  msg["iha_state"] = {{"airborne", false}, {"altitude_agl_m", 0.0},
+                       {"flight_mode", "LAND"}, {"gps_fix", "rtk_fixed"}};
   msg["route"] = route;
   msg["checksum"] = oss.str();
   std::string payload = msg.dump();
@@ -48,6 +46,6 @@ int main()
   inet_pton(AF_INET, "127.0.0.1", &dest.sin_addr);
   sendto(sock, payload.c_str(), payload.size(), 0, (struct sockaddr*)&dest, sizeof(dest));
   close(sock);
-  std::cout << "KABUL testi gonderildi (seq=1, airborne=true)\n";
+  std::cout << "RED testi gonderildi (seq=2, airborne=FALSE - Md.16 ihlali beklenmeli)\n";
   return 0;
 }

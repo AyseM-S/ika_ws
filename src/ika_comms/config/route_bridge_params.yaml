@@ -1,0 +1,9 @@
+route_bridge_node:
+  ros__parameters:
+    listen_port: 5005
+    iha_ip: "127.0.0.1"
+    iha_port: 5006
+    yki_ip: "127.0.0.1"
+    yki_port: 5007
+    local_origin_lat: 0.0   # *** TBD *** - IKA-KB gercek koordinati (saha olcumu/GNSS)
+    local_origin_lon: 0.0   # *** TBD ***

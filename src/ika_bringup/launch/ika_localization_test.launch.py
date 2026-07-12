@@ -13,7 +13,8 @@ def generate_launch_description():
         Node(package='ika_localization', executable='wheel_odom_node',
              parameters=[os.path.join(cfg, 'vehicle_params.yaml')]),
         Node(package='ika_localization', executable='fake_sensors'),
-        Node(package='ika_comms', executable='route_bridge_node'),
+        Node(package='ika_comms', executable='route_bridge_node',
+             parameters=[os.path.join(os.path.expanduser('~'), 'ika_ws', 'src', 'ika_comms', 'config', 'route_bridge_params.yaml')]),
         Node(package='ika_safety', executable='interlock_node'),
         Node(package='ika_bringup', executable='mission_manager_node'),
     ])
