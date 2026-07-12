@@ -1,24 +1,24 @@
 No,Gereksinim Metni (Ozet),Sahibi Alt Sistem,Dogrulama Yontemi,Kanit Referansi,Durum
-1,"IKA azami agirlik 10 kg (yuk haric)",IKA Mekanik,Test (tartim),TBD,Baslanmadi
+1,"IKA azami agirlik 10 kg (yuk haric)",IKA Mekanik,Test (tartim),"10kg hedefi resmi karar - vehicle_params.yaml (vehicle_mass_kg=10.0) ve guncellenmis mekanik DDR'ye (v2.1) islendi; gercek tartim testi henuz yapilmadi",Dogrulama Sureci Devam Ediyor
 3,"IKA min 200 gr yuk tasima",Ortak (Mekanik+Yazilim),Test (gorev testi),TBD,Baslanmadi
-4,"IKA azami gorev suresi 10 dk (600 sn)",IKA Yazilim,Test (sure olcumu),src/ika_bringup/src/mission_manager_node.cpp - state machine var ama sure siniri henuz kodlanmadi,Dogrulama Sureci Devam Ediyor
+4,"IKA azami gorev suresi 10 dk (600 sn)",IKA Yazilim,Test (sure olcumu),"mission_manager_node state machine calisiyor (test edildi) ama 600sn sure siniri/timeout mantigi henuz kodlanmadi",Dogrulama Sureci Devam Ediyor
 6,"Tum sistemler icin azami hazirlik suresi 15 dk",Ortak,Test,TBD,Baslanmadi
 15,"Tespit edilen guzergah bilgisi IKA'ya aktarilacak",IKA Yazilim,Test (entegrasyon),"route_bridge_node ICD v2 ile KABUL testi basarili (log: route_update KABUL EDILDI seq=1 4 waypoint)",Karsilandi
-16,"Guzergah aktarimi IHA inisinden once tamamlanacak",IKA Yazilim,Test + Analiz (state machine),"iha_state.airborne kontrolu eklendi ve test edildi (log: IHA havada degil Md.16 REDDEDILDI)",Karsilandi
-17,"Aktarim gercek zamanli yer istasyonundan izlenebilecek",Ortak (Yazilim+Haberlesme),Gosterim (demo),route_ack hem IHA hem YKI'ye UDP ile gonderiliyor (kod hazir) - gercek YKI arayuzu/dashboard yok,Dogrulama Sureci Devam Ediyor
-18,"IKA aktarilan guzergahi takip ederek hedefe otonom ulasacak",IKA Yazilim,Test (saha/simulasyon),"Kapali-dongu test: Nav2/DWB gercek path-following, BEKLEME->HAZIR->GOREV_AKTIF->TAMAMLANDI dongusu tam calisti (kisa rota, ~3.6m)",Karsilandi
+16,"Guzergah aktarimi IHA havadayken tamamlanacak",IKA Yazilim,Test + Analiz (state machine),"iha_state.airborne kontrolu eklendi ve test edildi (log: IHA havada degil Md.16 REDDEDILDI)",Karsilandi
+17,"Aktarim gercek zamanli yer istasyonundan izlenebilecek",Ortak (Yazilim+Haberlesme),Gosterim (demo),"route_ack hem IHA hem YKI'ye UDP ile gonderiliyor (kod+test hazir); fiziksel radyo donanimi artik BOM'da (Ubiquiti Bullet AC + Holybro SiK Telemetry) - gercek YKI dashboard arayuzu henuz yok",Dogrulama Sureci Devam Ediyor
+18,"IKA aktarilan guzergahi takip ederek hedefe otonom ulasacak",IKA Yazilim,Test (saha/simulasyon),"Kapali-dongu test: Nav2/DWB gercek path-following, BEKLEME->HAZIR->GOREV_AKTIF->TAMAMLANDI dongusu tam calisti, RViz gorsel kaniti alindi",Karsilandi
 19,"IKA gorevini tam otonom icra edecek",IKA Yazilim,Test,"EKF+Nav2+interlock+comms+mission_manager uctan uca entegre calisti, manuel mudahale olmadan TAMAMLANDI'ya ulasti",Karsilandi
-23,"IKA koordinat/hiz bilgisi yer istasyonunda gercek zamanli izlenebilecek",Ortak (Yazilim+Haberlesme),Gosterim,route_ack YKI'ye UDP ile gidiyor ama goruntuleme arayuzu (dashboard) yok,Dogrulama Sureci Devam Ediyor
-24,"IKA'nin guzergah takibi yer istasyonunda canli gosterilecek",Ortak (Yazilim+Haberlesme),Gosterim,Ayni - veri akisi var goruntuleme yok,Dogrulama Sureci Devam Ediyor
-32,"IKA uzerinde aviyonik ana guc hattini kesen Acil Akim Kesici Anahtar bulunacak",IKA Elektrik/Donanim,Inceleme + Test,TBD - FIZIKSEL DONANIM GEREKTIRIR bugunku interlock_node ile KARISTIRILMAMALI,Baslanmadi
+23,"IKA koordinat/hiz bilgisi yer istasyonunda gercek zamanli izlenebilecek",Ortak (Yazilim+Haberlesme),Gosterim,"route_ack YKI'ye UDP ile gidiyor, fiziksel radyo BOM'da tanimli (Bullet AC+SiK) - goruntuleme arayuzu (dashboard) henuz yok",Dogrulama Sureci Devam Ediyor
+24,"IKA'nin guzergah takibi yer istasyonunda canli gosterilecek",Ortak (Yazilim+Haberlesme),Gosterim,"Ayni - veri akisi ve fiziksel radyo var, dashboard goruntuleme yok",Dogrulama Sureci Devam Ediyor
+32,"IKA uzerinde aviyonik ana guc hattini kesen Acil Akim Kesici Anahtar bulunacak",IKA Elektrik/Donanim,Inceleme + Test,"Mushroom E-Stop BOM'a eklendi (guncellenmis mekanik DDR) - FIZIKSEL DONANIM GEREKTIRIR, bugunku interlock_node ile KARISTIRILMAMALI",Baslanmadi
 34,"Acil Akim Kesici Anahtar guc hattini max 2 sn'de kesecek",Ortak (Elektrik+Yazilim dogrulama),Test (sure olcumu),TBD,Baslanmadi
-35,"DDR'da IKA icin sistem mimarisi verilecek",IKA Yazilim,Inceleme (rapor/diyagram),IKA_DDR_Raporu.docx (guncellenmesi gerekiyor - bugunku node'lar eklenecek),Karsilandi
+35,"DDR'da IKA icin sistem mimarisi verilecek",IKA Yazilim,Inceleme (rapor/diyagram),"ICD v2, gorev/interlock/baglanti-kaybi diyagramlari, node tablosu mevcut - nihai DDR docx derlemesi bekleniyor",Karsilandi
 40,"Guzergah tespiti icin algoritma akis semasi verilecek",IHA Yazilim (Goruntu Isleme),Inceleme,TBD (IKA sorumlulugunda degil),Baslanmadi
-46,"Simulasyon IKA'nin otonom surusunu kapsayacak",IKA Yazilim,Test (simulasyon - FDR),TBD - Nav2 gazebo simulasyonu henuz yapilmadi,Baslanmadi
+46,"Simulasyon IKA'nin otonom surusunu kapsayacak",IKA Yazilim,Test (simulasyon - FDR),"RViz gorsel dogrulama yapildi (Marker tabanli); tam Gazebo fizik simulasyonu mekanik CAD gelince planlandi",Dogrulama Sureci Devam Ediyor
 54,"UHDR'de IKA otonom harekat videosu paylasilacak",IKA Yazilim,Gosterim (video - UHDR),TBD,Baslanmadi
 55,"IKA otonom harekat videosu belirli koordinatlar uzerinden ulasmayi icerecek",IKA Yazilim,Gosterim,TBD,Baslanmadi
 71,"Sistem icindeki yukler mekanik olarak sabitlenecek (surtunmeye dayali olamaz)",IKA Mekanik,Inceleme (gozle muayene),TBD,Baslanmadi
-129,"IKA tirmanma acisi 7 dereceden fazla olmayacak",Ortak (Mekanik+Yazilim hiz/tork siniri),Analiz + Test,"CELISKI TESPIT EDILDI: mekanik DDR govde egimini 12 derecenin altinda tutuyor (7den fazla!) - TOPLANTIDA GUNDEME ALINMALI",Baslanmadi
+129,"IKA tirmanma acisi 7 dereceden fazla olmayacak",Ortak (Mekanik+Yazilim hiz/tork siniri),Analiz + Test,"7 derece resmi karar - nav2_params_common.max_climb_angle_deg=7.0 config'e islendi, mekanik DDR guncellendi (motor toru yeniden hesaplandi); rocker-bogie kol uzunluklariyla govde eğiminin 7 altinda kaldigi kinematik dogrulama HALA mekanik ekipte acik madde",Dogrulama Sureci Devam Ediyor
 132,"IKA birincil yapi icin 1.5 guvenlik faktoru",IKA Mekanik,Analiz (FEM),TBD,Baslanmadi
 133,"IKA batarya kapagi icin 1.5 guvenlik faktoru",IKA Mekanik,Analiz,TBD,Baslanmadi
 2.2.5,"IHA yere temas etmeden IKA hareket edemez (interlock)",IKA Yazilim,Test,"interlock_node ile dogrulandi: touchdown=false iken /cmd_vel=0.0, touchdown=true iken komut geciyor (0.3)",Karsilandi
