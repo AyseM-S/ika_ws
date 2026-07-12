@@ -3,8 +3,8 @@ No,Gereksinim Metni (Ozet),Sahibi Alt Sistem,Dogrulama Yontemi,Kanit Referansi,D
 3,"IKA min 200 gr yuk tasima",Ortak (Mekanik+Yazilim),Test (gorev testi),TBD,Baslanmadi
 4,"IKA azami gorev suresi 10 dk (600 sn)",IKA Yazilim,Test (sure olcumu),src/ika_bringup/src/mission_manager_node.cpp - state machine var ama sure siniri henuz kodlanmadi,Dogrulama Sureci Devam Ediyor
 6,"Tum sistemler icin azami hazirlik suresi 15 dk",Ortak,Test,TBD,Baslanmadi
-15,"Tespit edilen guzergah bilgisi IKA'ya aktarilacak",IKA Yazilim,Test (entegrasyon),route_bridge_node + test_route_sender ile checksum dogrulanan paket testi basarili,Dogrulama Sureci Devam Ediyor
-16,"Guzergah aktarimi IHA inisinden once tamamlanacak",IKA Yazilim,Test + Analiz (state machine),UYARI: mission_manager su an SIRALAMA kontrolu yapmiyor (sadece ikisi de geldi mi bakiyor) - eklenmesi gerekiyor,Dogrulama Sureci Devam Ediyor
+15,"Tespit edilen guzergah bilgisi IKA'ya aktarilacak",IKA Yazilim,Test (entegrasyon),"route_bridge_node ICD v2 ile KABUL testi basarili (log: route_update KABUL EDILDI seq=1 4 waypoint)",Karsilandi
+16,"Guzergah aktarimi IHA inisinden once tamamlanacak",IKA Yazilim,Test + Analiz (state machine),"iha_state.airborne kontrolu eklendi ve test edildi (log: IHA havada degil Md.16 REDDEDILDI)",Karsilandi
 17,"Aktarim gercek zamanli yer istasyonundan izlenebilecek",Ortak (Yazilim+Haberlesme),Gosterim (demo),route_ack hem IHA hem YKI'ye UDP ile gonderiliyor (kod hazir) - gercek YKI arayuzu/dashboard yok,Dogrulama Sureci Devam Ediyor
 18,"IKA aktarilan guzergahi takip ederek hedefe otonom ulasacak",IKA Yazilim,Test (saha/simulasyon),EKF calisiyor ve test edildi (Gun8) - Nav2/DWA config yazildi ama HENUZ CALISTIRILMADI,Dogrulama Sureci Devam Ediyor
 19,"IKA gorevini tam otonom icra edecek",IKA Yazilim,Test,"Interlock+mission_manager+EKF birlikte test edildi (touchdown oncesi/sonrasi davranis dogrulandi, 0.0 -> 0.3 gecisi)",Dogrulama Sureci Devam Ediyor
