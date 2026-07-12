@@ -1,20 +1,19 @@
 # ============================================================
-# TEK DOGRULUK KAYNAGI
-# VARSAYIM olarak isaretli degerler mekanik veri gelince duzeltilecek
+# KARAR VERILDI (13.07.2026) - artik placeholder degil
 # ============================================================
 fake_sensors:
   ros__parameters:
-    track_width: 0.40   # wheel_odom_node ile AYNI olmali (gecici cift-kayit, tekillestirme sonraki is)
+    track_width: 0.40   # asagida gerekceli tahmin - ITEM 6
 
 wheel_odom_node:
   ros__parameters:
-    wheel_radius: 0.065        # BILINIYOR (mekanik DDR): 130mm dis cap / 2
-    track_width: 0.40          # *** VARSAYIM *** - 300mm govde yaricapina gore makul tahmin
-    encoder_ppr: 400.0            # *** VARSAYIM *** - tipik planet reduktorlu DC motor icin
+    wheel_radius: 0.065        # mekanik DDR: 130mm dis cap / 2
+    track_width: 0.40          # ITEM 6 - gerekceli muhendislik tahmini
+    encoder_ppr: 500.0          # ITEM 6 - gerekceli muhendislik tahmini, DOGRULANMALI
     publish_rate_hz: 30.0
 
 nav2_params_common:
   ros__parameters:
-    robot_radius: 0.3          # BILINIYOR (mekanik DDR): R=300mm emniyet cemberi
-    vehicle_mass_kg: 10.0        # SARTNAME limiti (mekanik belgedeki 25kg DEGIL - o netlesmedi)
-    max_climb_angle_deg: 12.0    # BILINIYOR (mekanik DDR): "govde egimini 12 altinda tutarak"
+    robot_radius: 0.3          # mekanik DDR: R=300mm emniyet cemberi
+    vehicle_mass_kg: 10.0        # KARAR: Sartname limiti esas alindi (mekanik DDR'deki 25kg DEGIL)
+    max_climb_angle_deg: 7.0     # KARAR: Req129 esas alindi (mekanik DDR'deki 12 DEGIL) - ITEM 4
