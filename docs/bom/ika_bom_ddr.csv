@@ -6,3 +6,6 @@ Motor Surucu,"Cytron MDD10A (yurtdisi) veya BTS7960 x2 (yerli)",1,80,80,60x55x15
 Ultrasonik Sensor,JSN-SR04T,2,28,56,45x20,300,Henuz_Aksiyon_Alinmadi,Robolinkmarket,2-4 is gunu
 Companion Computer,Raspberry Pi 4,1,46,46,85x56,10000,Alindi,Robotistan,Teslim alindi
 Motor+Enkoder Seti,DC Reduktorlu Motor + Hall Encoder,4,180,720,TBD,8000,Siparis_Edildi,Direnc.net,5-7 is gunu
+5.8GHz Alici,Ubiquiti Bullet AC,1,196,196,190x46,10500,Henuz_Aksiyon_Alinmadi,"Yurtdisi ithalat/yetkili distributor - ODR'deki 3 adet+anten toplu 36.500 TL'den tahmini pay",10-15 is gunu (ithalat)
+915MHz Telemetri,Holybro SiK Telemetry Radio V3,1,16,16,28x53x10.7,5000,Henuz_Aksiyon_Alinmadi,"ODR'deki 3 set/15.000 TL'den 1 set payi",5-10 is gunu
+PoE Injector/Splitter,"TBD - marka secimi Haberlesme Lead'e bagli (Bullet AC icin gerekli)",1,TBD,TBD,TBD,400,Henuz_Aksiyon_Alinmadi,TBD,TBD
