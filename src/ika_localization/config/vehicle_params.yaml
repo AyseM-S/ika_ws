@@ -1,13 +1,16 @@
 # ============================================================
-# TEK DOGRULUK KAYNAGI - cevaplar gelince SADECE burayi doldurun
+# TEK DOGRULUK KAYNAGI
+# VARSAYIM olarak isaretli degerler mekanik veri gelince duzeltilecek
 # ============================================================
 wheel_odom_node:
   ros__parameters:
-    wheel_radius: 0.065        # BILINIYOR (belgeden): 130mm dis cap / 2
-    track_width: 0.0           # <<< BEKLENIYOR: tekerlekler arasi mesafe (m)
-    encoder_ppr: 0.0           # <<< BEKLENIYOR: enkoder PPR (pulse/tur)
+    wheel_radius: 0.065        # BILINIYOR (mekanik DDR): 130mm dis cap / 2
+    track_width: 0.40          # *** VARSAYIM *** - 300mm govde yaricapina gore makul tahmin
+    encoder_ppr: 400            # *** VARSAYIM *** - tipik planet reduktorlu DC motor icin
     publish_rate_hz: 30.0
+
 nav2_params_common:
   ros__parameters:
-    robot_radius: 0.3          # BILINIYOR (belgeden): R=300mm emniyet cemberi
-    vehicle_mass_kg: 0.0       # <<< BEKLENIYOR: 10kg mi kesinlesecek (arkadasiniz duzeltince)
+    robot_radius: 0.3          # BILINIYOR (mekanik DDR): R=300mm emniyet cemberi
+    vehicle_mass_kg: 10.0        # SARTNAME limiti (mekanik belgedeki 25kg DEGIL - o netlesmedi)
+    max_climb_angle_deg: 12.0    # BILINIYOR (mekanik DDR): "govde egimini 12 altinda tutarak"
