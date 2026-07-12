@@ -2,11 +2,15 @@
 # TEK DOGRULUK KAYNAGI
 # VARSAYIM olarak isaretli degerler mekanik veri gelince duzeltilecek
 # ============================================================
+fake_sensors:
+  ros__parameters:
+    track_width: 0.40   # wheel_odom_node ile AYNI olmali (gecici cift-kayit, tekillestirme sonraki is)
+
 wheel_odom_node:
   ros__parameters:
     wheel_radius: 0.065        # BILINIYOR (mekanik DDR): 130mm dis cap / 2
     track_width: 0.40          # *** VARSAYIM *** - 300mm govde yaricapina gore makul tahmin
-    encoder_ppr: 400            # *** VARSAYIM *** - tipik planet reduktorlu DC motor icin
+    encoder_ppr: 400.0            # *** VARSAYIM *** - tipik planet reduktorlu DC motor icin
     publish_rate_hz: 30.0
 
 nav2_params_common:

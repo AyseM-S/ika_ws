@@ -3,6 +3,8 @@
 #include <iomanip>
 #include <ctime>
 #include <chrono>
+#include <cstring>
+#include <cerrno>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -45,7 +47,13 @@ public:
     }
 
     path_pub_ = this->create_publisher<nav_msgs::msg::Path>("/route/waypoints", 10);
-    setupSocket();
+
+    if (!setupSocket()) {
+      RCLCPP_FATAL(this->get_logger(),
+        "UDP soket kurulamadi - route_bridge_node ISLEVSIZ durumda! Node yine de acik kalacak "
+        "ama HICBIR PAKET ALAMAYACAK.");
+    }
+
     timer_ = this->create_wall_timer(
       std::chrono::milliseconds(50), std::bind(&RouteBridgeNode::pollSocket, this));
     RCLCPP_INFO(this->get_logger(), "route_bridge_node (ICD v2) basladi, port %d dinleniyor.", listen_port_);
@@ -53,18 +61,41 @@ public:
   ~RouteBridgeNode() { if (sock_fd_ >= 0) close(sock_fd_); }
 
 private:
-  void setupSocket()
+  bool setupSocket()
   {
     sock_fd_ = socket(AF_INET, SOCK_DGRAM, 0);
+    if (sock_fd_ < 0) {
+      RCLCPP_ERROR(this->get_logger(), "socket() basarisiz: %s", strerror(errno));
+      return false;
+    }
+
+    int reuse = 1;
+    if (setsockopt(sock_fd_, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) < 0) {
+      RCLCPP_WARN(this->get_logger(), "SO_REUSEADDR ayarlanamadi: %s", strerror(errno));
+    }
+
     sockaddr_in addr{};
     addr.sin_family = AF_INET;
     addr.sin_addr.s_addr = INADDR_ANY;
     addr.sin_port = htons(listen_port_);
-    bind(sock_fd_, (struct sockaddr*)&addr, sizeof(addr));
+
+    if (bind(sock_fd_, (struct sockaddr*)&addr, sizeof(addr)) < 0) {
+      RCLCPP_ERROR(this->get_logger(),
+        "UDP bind BASARISIZ (port %d): %s (errno=%d) - port baska bir process'te olabilir, "
+        "'sudo lsof -i :%d' ile kontrol edin.", listen_port_, strerror(errno), errno, listen_port_);
+      close(sock_fd_);
+      sock_fd_ = -1;
+      return false;
+    }
+
+    RCLCPP_INFO(this->get_logger(), "UDP port %d basariyla bind edildi.", listen_port_);
+    return true;
   }
 
   void pollSocket()
   {
+    if (sock_fd_ < 0) return;  // bind basarisizdi, dinleyecek soket yok
+
     char buf[8192];
     sockaddr_in from{}; socklen_t fromlen = sizeof(from);
     ssize_t n = recvfrom(sock_fd_, buf, sizeof(buf) - 1, MSG_DONTWAIT, (struct sockaddr*)&from, &fromlen);
@@ -83,7 +114,6 @@ private:
     std::string sender_msg_id = msg.value("msg_id", "");
     long sender_seq = msg.value("seq_no", -1L);
 
-    // --- 1) Sema dogrulamasi (malformed) ---
     std::string malformed_reason;
     if (!msg.contains("msg_id")) malformed_reason = "msg_id eksik";
     if (!msg.contains("seq_no")) malformed_reason = "seq_no eksik";
@@ -108,7 +138,6 @@ private:
       return;
     }
 
-    // --- 2) Checksum dogrulamasi ---
     std::string received_crc = msg.value("checksum", "");
     std::string computed_crc = toHex(ika_comms::crc32(msg["route"].dump()));
     int wp_count = static_cast<int>(msg["route"]["waypoints"].size());
@@ -120,7 +149,6 @@ private:
       return;
     }
 
-    // --- 3) Sira/eskilik kontrolu ---
     if (sender_seq >= 0 && sender_seq <= last_seq_no_) {
       sendAck(sender_msg_id, sender_seq, "rejected_stale",
         "seq_no " + std::to_string(sender_seq) + " <= son islenen " + std::to_string(last_seq_no_),
@@ -129,7 +157,6 @@ private:
       return;
     }
 
-    // --- 4) Md.16: IHA havada mi? ---
     bool airborne = msg["iha_state"].value("airborne", false);
     if (!airborne) {
       sendAck(sender_msg_id, sender_seq, "rejected_not_airborne",
@@ -138,7 +165,6 @@ private:
       return;
     }
 
-    // --- Kabul ---
     if (sender_seq >= 0) last_seq_no_ = sender_seq;
     publishPath(msg["route"]);
     sendAck(sender_msg_id, sender_seq, "accepted", "", computed_crc, wp_count);

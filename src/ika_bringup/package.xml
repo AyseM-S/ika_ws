@@ -12,6 +12,8 @@
   <depend>rclcpp</depend>
   <depend>std_msgs</depend>
   <depend>nav_msgs</depend>
+  <depend>rclcpp_action</depend>
+  <depend>nav2_msgs</depend>
   <depend>launch_ros</depend>
   <depend>launch</depend>
 

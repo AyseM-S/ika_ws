@@ -5,5 +5,8 @@ route_bridge_node:
     iha_port: 5006
     yki_ip: "127.0.0.1"
     yki_port: 5007
-    local_origin_lat: 0.0   # *** TBD *** - IKA-KB gercek koordinati (saha olcumu/GNSS)
-    local_origin_lon: 0.0   # *** TBD ***
+    # *** GECICI TEST DEGERI *** - test_route_sender'daki ilk waypoint ile ayni.
+    # Bu, "rota robotun basladigi noktadan basliyor" testini simule eder.
+    # GERCEK IKA-KB koordinati (saha olcumu/GNSS) gelince degistirilecek.
+    local_origin_lat: 39.925101
+    local_origin_lon: 32.836742
