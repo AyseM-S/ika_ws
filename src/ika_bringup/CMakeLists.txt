@@ -9,9 +9,14 @@ find_package(rclcpp_action REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(nav2_msgs REQUIRED)
+find_package(visualization_msgs REQUIRED)
 
 add_executable(mission_manager_node src/mission_manager_node.cpp)
 ament_target_dependencies(mission_manager_node rclcpp rclcpp_action std_msgs nav_msgs nav2_msgs)
+add_executable(marker_robot_viz src/marker_robot_viz.cpp)
+ament_target_dependencies(marker_robot_viz rclcpp visualization_msgs)
+install(TARGETS marker_robot_viz DESTINATION lib/${PROJECT_NAME})
+
 install(TARGETS mission_manager_node DESTINATION lib/${PROJECT_NAME})
 install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
 

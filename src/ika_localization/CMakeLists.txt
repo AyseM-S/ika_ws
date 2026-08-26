@@ -12,6 +12,9 @@ find_package(tf2_ros REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 
+add_executable(fake_gps src/fake_gps.cpp)
+ament_target_dependencies(fake_gps rclcpp sensor_msgs nav_msgs)
+
 add_executable(wheel_odom_node src/wheel_odom_node.cpp)
 ament_target_dependencies(wheel_odom_node rclcpp std_msgs nav_msgs)
 
@@ -19,6 +22,7 @@ add_executable(fake_sensors src/fake_sensors.cpp)
 ament_target_dependencies(fake_sensors rclcpp std_msgs sensor_msgs geometry_msgs)
 
 install(TARGETS
+  fake_gps
   wheel_odom_node
   fake_sensors
   DESTINATION lib/${PROJECT_NAME})
