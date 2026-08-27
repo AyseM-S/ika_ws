@@ -5,8 +5,15 @@ route_bridge_node:
     iha_port: 5006
     yki_ip: "127.0.0.1"
     yki_port: 5007
-    # *** GECICI TEST DEGERI *** - test_route_sender'daki ilk waypoint ile ayni.
-    # Bu, "rota robotun basladigi noktadan basliyor" testini simule eder.
-    # GERCEK IKA-KB koordinati (saha olcumu/GNSS) gelince degistirilecek.
-    local_origin_lat: 39.925101
-    local_origin_lon: 32.836742
+
+    # --- Origin (WGS84 -> yerel kartezyen referans noktasi) ---
+    # "auto"    : Ilk GECERLI GNSS fix'i origin olarak kilitlenir (YARISMA MODU)
+    # "manual"  : Asagidaki sabit lat/lon kullanilir (test/kalibrasyon)
+    # "service" : /set_local_origin servisiyle YKS'den set edilir
+    origin_mode: "auto"
+    manual_origin_lat: 39.925101
+    manual_origin_lon: 32.836742
+
+    # Auto modda ilk fix'in kabul kriterleri (kotu fix'e kilitlenmeyi onler)
+    origin_min_fix_status: 0      # NavSatStatus: 0=FIX, 1=SBAS, 2=GBAS. -1 (NO_FIX) reddedilir
+    origin_max_covariance: 25.0   # m^2 - yatay konum kovaryansi bu esigin ustundeyse fix reddedilir

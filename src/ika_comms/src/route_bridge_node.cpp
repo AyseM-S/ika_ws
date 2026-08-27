@@ -12,6 +12,7 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "nav_msgs/msg/path.hpp"
+#include "sensor_msgs/msg/nav_sat_fix.hpp"
 #include "geometry_msgs/msg/pose_stamped.hpp"
 #include "nlohmann/json.hpp"
 #include "ika_comms/checksum.hpp"
@@ -29,21 +30,32 @@ public:
     this->declare_parameter("iha_port", 5006);
     this->declare_parameter("yki_ip", std::string("127.0.0.1"));
     this->declare_parameter("yki_port", 5007);
-    this->declare_parameter("local_origin_lat", 0.0);
-    this->declare_parameter("local_origin_lon", 0.0);
+    this->declare_parameter("origin_mode", std::string("auto"));
+    this->declare_parameter("manual_origin_lat", 0.0);
+    this->declare_parameter("manual_origin_lon", 0.0);
+    this->declare_parameter("origin_min_fix_status", 0);
+    this->declare_parameter("origin_max_covariance", 25.0);
 
     listen_port_ = this->get_parameter("listen_port").as_int();
     iha_ip_ = this->get_parameter("iha_ip").as_string();
     iha_port_ = this->get_parameter("iha_port").as_int();
     yki_ip_ = this->get_parameter("yki_ip").as_string();
     yki_port_ = this->get_parameter("yki_port").as_int();
-    origin_lat_ = this->get_parameter("local_origin_lat").as_double();
-    origin_lon_ = this->get_parameter("local_origin_lon").as_double();
+    origin_mode_ = this->get_parameter("origin_mode").as_string();
+    min_fix_status_ = this->get_parameter("origin_min_fix_status").as_int();
+    max_cov_ = this->get_parameter("origin_max_covariance").as_double();
 
-    if (origin_lat_ == 0.0 && origin_lon_ == 0.0) {
-      RCLCPP_WARN(this->get_logger(),
-        "local_origin_lat/lon HALA PLACEHOLDER (0,0) - gercek IKA-KB koordinati girilmeden "
-        "waypoint donusumu YANLIS olacak!");
+    if (origin_mode_ == "manual") {
+      origin_lat_ = this->get_parameter("manual_origin_lat").as_double();
+      origin_lon_ = this->get_parameter("manual_origin_lon").as_double();
+      origin_set_ = true;
+      RCLCPP_INFO(this->get_logger(), "Origin MANUEL olarak set edildi: %.6f, %.6f", origin_lat_, origin_lon_);
+    } else if (origin_mode_ == "auto") {
+      gps_sub_ = this->create_subscription<sensor_msgs::msg::NavSatFix>(
+        "/gps/fix", 10, std::bind(&RouteBridgeNode::onGpsFix, this, std::placeholders::_1));
+      RCLCPP_INFO(this->get_logger(), "Origin AUTO modda - ilk gecerli GNSS fix bekleniyor...");
+    } else {
+      RCLCPP_WARN(this->get_logger(), "origin_mode=\"%s\" taninmadi - origin set edilene kadar paketler REDDEDILECEK.", origin_mode_.c_str());
     }
 
     path_pub_ = this->create_publisher<nav_msgs::msg::Path>("/route/waypoints", 10);
@@ -61,6 +73,38 @@ public:
   ~RouteBridgeNode() { if (sock_fd_ >= 0) close(sock_fd_); }
 
 private:
+  void onGpsFix(const sensor_msgs::msg::NavSatFix::SharedPtr msg)
+  {
+    if (origin_set_) return;  // zaten kilitli, tekrar set etme
+
+    if (msg->status.status < min_fix_status_) {
+      RCLCPP_WARN_THROTTLE(this->get_logger(), *this->get_clock(), 5000,
+        "GNSS fix kalitesi yetersiz (status=%d, gereken>=%d) - origin bekleniyor.",
+        msg->status.status, min_fix_status_);
+      return;
+    }
+    double cov = std::max(msg->position_covariance[0], msg->position_covariance[4]);
+    if (cov > max_cov_) {
+      RCLCPP_WARN_THROTTLE(this->get_logger(), *this->get_clock(), 5000,
+        "GNSS kovaryansi cok yuksek (%.2f > %.2f m^2) - origin bekleniyor.", cov, max_cov_);
+      return;
+    }
+    if (!std::isfinite(msg->latitude) || !std::isfinite(msg->longitude) ||
+        std::fabs(msg->latitude) > 90.0 || std::fabs(msg->longitude) > 180.0 ||
+        (std::fabs(msg->latitude) < 1e-6 && std::fabs(msg->longitude) < 1e-6)) {
+      RCLCPP_WARN_THROTTLE(this->get_logger(), *this->get_clock(), 5000,
+        "GNSS koordinati gecersiz (lat=%.6f lon=%.6f) - origin bekleniyor.", msg->latitude, msg->longitude);
+      return;
+    }
+
+    origin_lat_ = msg->latitude;
+    origin_lon_ = msg->longitude;
+    origin_set_ = true;
+    RCLCPP_INFO(this->get_logger(),
+      "ORIGIN KILITLENDI (auto, ilk gecerli GNSS fix): %.7f, %.7f (kovaryans=%.2f m^2)",
+      origin_lat_, origin_lon_, cov);
+  }
+
   bool setupSocket()
   {
     sock_fd_ = socket(AF_INET, SOCK_DGRAM, 0);
@@ -113,6 +157,14 @@ private:
 
     std::string sender_msg_id = msg.value("msg_id", "");
     long sender_seq = msg.value("seq_no", -1L);
+
+    if (!origin_set_) {
+      sendAck(sender_msg_id, sender_seq, "rejected_no_origin",
+        "Yerel origin henuz set edilmedi (GNSS fix bekleniyor) - waypoint donusumu yapilamaz", "", 0);
+      RCLCPP_WARN_THROTTLE(this->get_logger(), *this->get_clock(), 3000,
+        "Paket REDDEDILDI: origin henuz set edilmedi.");
+      return;
+    }
 
     std::string malformed_reason;
     if (!msg.contains("msg_id")) malformed_reason = "msg_id eksik";
@@ -245,7 +297,12 @@ private:
 
   int sock_fd_{-1}, listen_port_, iha_port_, yki_port_;
   std::string iha_ip_, yki_ip_;
-  double origin_lat_, origin_lon_;
+  double origin_lat_{0.0}, origin_lon_{0.0};
+  bool origin_set_{false};
+  std::string origin_mode_;
+  int min_fix_status_;
+  double max_cov_;
+  rclcpp::Subscription<sensor_msgs::msg::NavSatFix>::SharedPtr gps_sub_;
   long last_seq_no_;
   long ack_counter_;
   rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr path_pub_;
