@@ -1,5 +1,8 @@
 // 6 tekerlekli skid-steer IKA icin standart diferansiyel odometri.
 // Rocker-bogie SADECE suspansiyon (dikey uyum), donus sol/sag hiz farkiyla.
+// Kovaryans, motor_current_monitor_node'dan gelen /wheel_odom_covariance_scale
+// ile dinamik olarak carpiliyor: patinaj/sikisma supheli anlarda EKF bu odometriye
+// daha az guveniyor (ACS712 tabanli tespit - DDR Bol. 3.3.5.3).
 #include <cmath>
 #include <memory>
 #include "rclcpp/rclcpp.hpp"
@@ -13,40 +16,48 @@ class WheelOdomNode : public rclcpp::Node
 public:
   WheelOdomNode() : Node("wheel_odom_node"),
     theta_(0.0), x_(0.0), y_(0.0), v_left_(0.0), v_right_(0.0),
-    have_left_(false), have_right_(false)
+    have_left_(false), have_right_(false), slip_scale_(1.0)
   {
     this->declare_parameter("wheel_radius", 0.065);
     this->declare_parameter("track_width", 0.0);
     this->declare_parameter("encoder_ppr", 0.0);
     this->declare_parameter("publish_rate_hz", 30.0);
-
     track_width_ = this->get_parameter("track_width").as_double();
     if (track_width_ <= 0.0) {
       RCLCPP_WARN(this->get_logger(),
         "track_width HENUZ GIRILMEDI (vehicle_params.yaml) - odometri YANLIS olacak!");
     }
-
     // Not: encoder_ppr burada degil, ham enkoder->hiz donusumunu yapan
     // ayri bir surucu katmaninda kullanilacak (donanim gelince eklenir).
     // Bu node, zaten m/s'ye cevrilmis sol/sag hizi tuketir.
-
     left_sub_ = this->create_subscription<std_msgs::msg::Float64>(
       "/wheel/left_speed", 10, std::bind(&WheelOdomNode::onLeft, this, _1));
     right_sub_ = this->create_subscription<std_msgs::msg::Float64>(
       "/wheel/right_speed", 10, std::bind(&WheelOdomNode::onRight, this, _1));
-    odom_pub_ = this->create_publisher<nav_msgs::msg::Odometry>("/wheel/odom", 10);
 
+    // ACS712 tabanli patinaj/sikisma tespitinden gelen dinamik kovaryans carpani.
+    // Yayinci yoksa (motor_current_monitor_node calismiyorsa) slip_scale_ 1.0'da
+    // kalir - yani bu node, o node olmadan da eskisi gibi calisir (geriye uyumlu).
+    slip_scale_sub_ = this->create_subscription<std_msgs::msg::Float64>(
+      "/wheel_odom_covariance_scale", 10,
+      std::bind(&WheelOdomNode::onSlipScale, this, _1));
+
+    odom_pub_ = this->create_publisher<nav_msgs::msg::Odometry>("/wheel/odom", 10);
     double rate = this->get_parameter("publish_rate_hz").as_double();
     last_time_ = this->get_clock()->now();
     timer_ = this->create_wall_timer(
       std::chrono::duration<double>(1.0 / rate), std::bind(&WheelOdomNode::tick, this));
-
     RCLCPP_INFO(this->get_logger(), "wheel_odom_node basladi. track_width=%.3f", track_width_);
   }
 
 private:
   void onLeft(const std_msgs::msg::Float64::SharedPtr msg) { v_left_ = msg->data; have_left_ = true; }
   void onRight(const std_msgs::msg::Float64::SharedPtr msg) { v_right_ = msg->data; have_right_ = true; }
+  void onSlipScale(const std_msgs::msg::Float64::SharedPtr msg)
+  {
+    // motor_current_monitor_node'un ciktisi: 1.0 = normal, >1.0 = supheli (guveni azalt)
+    slip_scale_ = std::max(1.0, msg->data);
+  }
 
   void tick()
   {
@@ -59,7 +70,6 @@ private:
     // --- Standart skid-steer / diferansiyel surus odometrisi ---
     double v = (v_left_ + v_right_) / 2.0;
     double omega = (track_width_ > 1e-6) ? (v_right_ - v_left_) / track_width_ : 0.0;
-
     theta_ += omega * dt;
     x_ += v * std::cos(theta_) * dt;
     y_ += v * std::sin(theta_) * dt;
@@ -74,15 +84,26 @@ private:
     odom.pose.pose.orientation.w = std::cos(theta_ / 2.0);
     odom.twist.twist.linear.x = v;
     odom.twist.twist.angular.z = omega;
-    odom.twist.covariance[0] = 0.02;   // sadece hiza guven (yaw IMU'dan gelecek)
-    odom.twist.covariance[7] = 0.001;  // Y-hiz varyansi - SIFIR OLAMAZ, EKF kararliligi icin sart
+
+    // Taban kovaryanslar (Gun 8'deki degerler), slip_scale_ ile carpiliyor.
+    // slip_scale_ == 1.0 (normal durum) -> davranis eskisiyle birebir ayni.
+    odom.twist.covariance[0] = 0.02 * slip_scale_;   // Vx guveni (yaw IMU'dan gelecek)
+    odom.twist.covariance[7] = 0.001 * slip_scale_;  // Y-hiz varyansi - SIFIR OLAMAZ, EKF kararliligi icin sart
+
     odom_pub_->publish(odom);
+
+    if (slip_scale_ > 1.5) {
+      RCLCPP_WARN_THROTTLE(this->get_logger(), *this->get_clock(), 2000,
+        "wheel_odom guveni dusuruldu: slip_scale=%.1f (motor_current_monitor_node uyarisi)",
+        slip_scale_);
+    }
   }
 
   double theta_, x_, y_, v_left_, v_right_, track_width_;
   bool have_left_, have_right_;
+  double slip_scale_;
   rclcpp::Time last_time_;
-  rclcpp::Subscription<std_msgs::msg::Float64>::SharedPtr left_sub_, right_sub_;
+  rclcpp::Subscription<std_msgs::msg::Float64>::SharedPtr left_sub_, right_sub_, slip_scale_sub_;
   rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odom_pub_;
   rclcpp::TimerBase::SharedPtr timer_;
 };
